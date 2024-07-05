@@ -4,10 +4,64 @@
 
 body {
   user-select: none;
+  background-color: #800080;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.image-container {
+  width: 200px;
+  height: 200px;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.camera-view {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.card {
+  width: 200px;
+  height: 350px;
+  background-color: #d3a3d3;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.card p {
+  margin: 8px 0 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Number of lines to show */
+  -webkit-box-orient: vertical;
 }
 
 .diagonal-gradient {
-  background: linear-gradient(to bottom right, #f44819, #f1b031);
-  width: 100vw;
-  height: 100vh;
+  background: linear-gradient(to bottom right, #800080, #333);
 }
