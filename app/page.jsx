@@ -3,15 +3,14 @@ import React, { useState, useRef } from "react";
 import { GoUpload } from "react-icons/go";
 import { MdOutlinePhotoCamera } from "react-icons/md";
 import Navbar from "./components/Navbar";
-import axios from "axios";
 import Clarifai from "clarifai";
 
 const clarifaiApp = new Clarifai.App({
-  apiKey: "af561ba02c294561b5d83752d60552ed", // Your PAT
+  apiKey: "7f7d12ed2d5b4b67848578bb9357d7f4", // Your PAT
 });
 
-const modelID = "general-image-recognition"; // Your selected model ID
-const modelVersionID = "aa7f35c01e0642fda5cf400f543e7c40"; // Your selected model version ID
+const modelID = "vss-image-recognition"; // Your selected model ID
+const modelVersionID = "75563136442945bc881d02190ca3b756"; // Your selected model version ID
 
 function Home() {
   const [image, setImage] = useState(null);
@@ -47,47 +46,32 @@ function Home() {
           }
 
           const concepts = clarifaiResponse.outputs[0].data.concepts;
-          const relevantConcepts = concepts.filter(
-            (concept) => concept.value > 0.85
-          ); // Adjust threshold as needed
-          const searchKeywords = relevantConcepts
-            .map((concept) => concept.name)
-            .join(",");
+          const matchedProducts = concepts.map((concept) => {
+            // Log the entire concept object to inspect its structure
+            console.log("Concept:", concept);
 
-          console.log("Search keywords:", searchKeywords); // Log search keywords
+            // Since metadata is not present, create default values
+            const link = concept.link || "#"; // Use a property from concept or a default link
+            const title = concept.name || "Default Title"; // Use a property from concept or a default title
 
-          // Fetch similar products using the Google Custom Search API
-          const googleResponse = await axios.get(
-            "https://www.googleapis.com/customsearch/v1",
-            {
-              params: {
-                key: "AIzaSyB5LoFRWbyGHR2Fu0Ak0seqB5fPrA122nQ",
-                cx: "85597b4ec11a74a60",
-                q: searchKeywords,
-              },
-            }
-          );
+            // Log the link and title
+            console.log("Link:", link);
+            console.log("Title:", title);
 
-          console.log("Google Custom Search response:", googleResponse);
-          console.log(
-            "Full Google Custom Search response data:",
-            googleResponse.data
-          );
+            return {
+              image: URL.createObjectURL(file), // Using the uploaded image as the display image
+              title, // Fallback to a default title if not found
+              link, // Fallback to a default link if not found
+            };
+          });
 
-          if (
-            !googleResponse.data.items ||
-            googleResponse.data.items.length === 0
-          ) {
-            throw new Error("No results found for the search query");
-          }
+          // Check the resulting matchedProducts array
+          console.log("Matched Products:", matchedProducts);
 
-          setSimilarProducts(
-            googleResponse.data.items.map((item) => ({
-              link: item.link,
-              image: item.pagemap?.cse_image?.[0]?.src || "",
-              title: item.title,
-            }))
-          );
+          // Check the resulting matchedProducts array
+          console.log("Matched Products:", matchedProducts);
+
+          setSimilarProducts(matchedProducts);
           setIsLoading(false);
         } catch (error) {
           console.error("Error finding similar products:", error);
@@ -192,16 +176,14 @@ function Home() {
             {similarProducts.length > 0 && (
               <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                 {similarProducts.map((product, index) => (
-                  <a
+                  <div
                     key={index}
-                    href={product.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="card"
+                    onClick={() => window.open(product.link, "_blank")}
                   >
                     <img src={product.image} alt={product.title} />
                     <p>{product.title}</p>
-                  </a>
+                  </div>
                 ))}
               </div>
             )}
