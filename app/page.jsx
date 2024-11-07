@@ -6,11 +6,11 @@ import Navbar from "./components/Navbar";
 import Clarifai from "clarifai";
 
 const clarifaiApp = new Clarifai.App({
-  apiKey: "7f7d12ed2d5b4b67848578bb9357d7f4", // Your PAT
+  apiKey: "2efe58f496294495ae6b1e3f66b41493", // Your PAT
 });
 
 const modelID = "vss-image-recognition"; // Your selected model ID
-const modelVersionID = "75563136442945bc881d02190ca3b756"; // Your selected model version ID
+const modelVersionID = "a3df33b96f3f454285591746be8648e0"; // Your selected model version ID
 
 function Home() {
   const [image, setImage] = useState(null);
